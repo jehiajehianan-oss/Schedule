@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">我的课表</string>
+    <string name="widget_today_label">今日课程</string>
+    <string name="widget_week_label">本周课表</string>
+    <string name="widget_today_desc">显示今天的课程安排</string>
+    <string name="widget_week_desc">显示本周一整张课表</string>
+</resources>

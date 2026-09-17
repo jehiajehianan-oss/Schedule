@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 个人数据：课表页里有学号、班级，绝不提交
+data/*.html
+data/*.xlsx
+
+# 生成产物，随时可以重跑出来
+output/*.xlsx
+output/*.html
+output/*.apk
+output/预览图/
+
+# 小组件读的数据（由自己的课表生成，仓库里那份是演示用的假数据，改过就别提交）
+# widget/app/src/main/assets/schedule.json
+
+# Android / Gradle
+widget/.gradle/
+widget/build/
+widget/app/build/
+widget/local.properties
+
+# 抓取脚本用的浏览器 profile（里面是会话 Cookie，绝不能提交）
+.browser-profile/
+
+docs
