@@ -1,19 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  一个格子：底层是「今天」整列的淡底色（band），上面是课块（box_wrap 用 padding 控制四边缝隙），
+  最底下一条 1px 行分隔线（hair）。
+  课块 = 一个纯白圆角 ImageView（box_bg）+ 压在它上面的课名。形状按「首格 / 中格 / 尾格 / 单格」切换，
+  颜色用 setColorFilter 现染，所以色卡和「自定义颜色」都能画出来；跨多节的课因此连成一整块。
+-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:layout_columnWeight="1"
-    android:layout_rowWeight="1">
+    android:layout_height="match_parent"
+    android:layout_weight="1">
 
-    <TextView
-        android:id="@+id/box"
+    <View
+        android:id="@+id/band"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="1dp"
-        android:ellipsize="end"
-        android:gravity="center"
-        android:maxLines="3"
-        android:padding="1dp"
-        android:textSize="10sp" />
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="1dp" />
 
+    <FrameLayout
+        android:id="@+id/box_wrap"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/box_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:importantForAccessibility="no"
+            android:scaleType="fitXY" />
+
+        <TextView
+            android:id="@+id/box"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="2"
+            android:padding="1dp"
+            android:textSize="9sp" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/hair"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom" />
 </FrameLayout>

@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--
+      主题三项：浅色 / 深色 / 跟随系统，默认浅色（壁纸是亮调，深色卡压上去会发黑）。
+      没有 AppCompat 依赖，所以直接用系统的 DeviceDefault Light/Dark 两套：
+      深色就是 Theme.DeviceDefault（DeviceDefault 本身是深色那套，没有单独的 Dark 变体）。
+      Activity 在 onCreate 里按设置 setTheme()，改主题时 recreate()。
+    -->
     <style name="AppTheme" parent="@android:style/Theme.DeviceDefault.Light.DarkActionBar" />
+    <style name="AppTheme.Dark" parent="@android:style/Theme.DeviceDefault" />
 </resources>

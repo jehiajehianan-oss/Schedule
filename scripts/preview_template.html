@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>我的课表 · 组件预览</title>
+<style>
+  :root {
+    --bg:#f2f3f5; --card:#fff; --text:#111827; --muted:#3f4a5a; --line:#e5e7eb;
+    --accent:#2563EB; --accent-text:#1E40AF;
+    --page-text:#111827; --page-muted:#3f4a5a; --page-card:#fff;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--page-text);
+    font:14px/1.5 -apple-system,"HarmonyOS Sans","Noto Sans CJK SC","Microsoft YaHei",sans-serif; }
+  .page { max-width:980px; margin:0 auto; padding:20px 16px 60px; }
+  h1 { font-size:18px; margin:0 0 4px; }
+  .sub { color:var(--page-muted); font-size:12px; margin-bottom:16px; }
+  h2 { font-size:14px; margin:26px 0 10px; }
+  .tabs { display:flex; gap:6px; margin-bottom:18px; }
+  .tabs button { border:0; border-radius:9px; padding:7px 14px; font-size:13px;
+    background:#e6e8ec; color:#41474f; cursor:pointer; font-family:inherit; }
+  .tabs button.on { background:var(--accent); color:#fff; }
+  .panel { display:none; }
+  .panel.on { display:block; }
+  .bar { display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-bottom:8px; }
+  .bar .lab { color:var(--page-muted); font-size:12px; margin-right:2px; }
+  .bar button { border:1px solid var(--line); background:#fff; color:#41474f; border-radius:8px;
+    padding:5px 10px; font-size:12px; cursor:pointer; font-family:inherit; }
+  .bar button.on { border-color:var(--accent); color:var(--accent); background:#eef3fe; }
+  input[type=time],input[type=number] { border:1px solid var(--line); border-radius:8px;
+    padding:5px 8px; font:12px inherit; font-family:inherit; }
+
+  /* ---- 把组件放在真实壁纸上：cover + 居中 = 手机上的实际裁切 ---- */
+  .desk { border-radius:16px; overflow:hidden; background:#cfd8cf url("__WALLPAPER__") center/cover no-repeat;
+    padding:16px; display:flex; justify-content:center; }
+  .desk.tall { flex-direction:column; align-items:center; gap:14px; }
+
+  /* ---- 组件本体：1px = 1dp，外面用 scale 放大看 ---- */
+  .slot { position:relative; }
+  .mock { position:absolute; top:0; left:0; transform-origin:top left;
+    border-radius:22px; padding:12px; overflow:hidden;
+    display:flex; flex-direction:column; }
+  /* 周视图 / 考试表自己就是整张卡（自带 10px 内边距），所以只缩放、不再套 padding */
+  .mocklet { position:absolute; top:0; left:0; transform-origin:top left; }
+
+  /* 主题：浅色 92% 白 / 深色 92% 墨。课块颜色两套共用，白字永远不变 */
+  .mock, .wk { background:rgba(255,255,255,.92); }
+  body.dark .mock, body.dark .wk { background:rgba(23,26,32,.92); }
+  body.dark .mock { --text:#F1F3F5; --muted:#A8B0BA; --hair:rgba(255,255,255,.14); }
+  .mock { --text:#111827; --muted:#3f4a5a; --hair:rgba(17,24,39,.12); }
+
+  /* ---------- 今日课程 ---------- */
+  .t-hd { display:flex; align-items:center; flex:none; }
+  .t-hd .hd { flex:1; font-size:11px; color:var(--muted);
+    overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+  .t-hd .pill { flex:none; font-size:10px; line-height:1.5; color:#fff; background:var(--accent);
+    border-radius:999px; padding:1px 8px; white-space:nowrap; }
+  .t-body { flex:1; display:flex; flex-direction:column; justify-content:center; min-height:0; }
+  .hero { display:flex; }
+  .bar4 { width:4px; flex:none; align-self:stretch; border-radius:2px; background:var(--accent); }
+  .hero-txt { flex:1; padding-left:10px; min-width:0; }
+  .c-name { font-size:20px; font-weight:600; color:var(--text); letter-spacing:-.2px;
+    line-height:1.3; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+  .c-time { font-size:14px; line-height:1.3; margin-top:3px; color:var(--text);
+    font-variant-numeric:tabular-nums; }
+  .c-meta { font-size:12px; color:var(--muted); margin-top:3px;
+    line-height:1.3; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+  .prog { height:3px; margin-top:10px; background:var(--hair); border-radius:1.5px; }
+  .prog i { display:block; height:3px; background:var(--accent); border-radius:1.5px; }
+  .t-next { flex:none; border-top:1px solid var(--hair); margin-top:8px; padding-top:7px; }
+  .next { display:flex; align-items:center; height:18px; }
+  .n-lab { font-size:10px; color:var(--muted); flex:none; }
+  .n-name { font-size:13px; color:var(--text); margin-left:8px; flex:1; overflow:hidden;
+    white-space:nowrap; text-overflow:ellipsis; }
+  .n-time { font-size:11px; color:var(--muted); font-variant-numeric:tabular-nums; }
+  .n-room { font-size:11px; color:var(--muted); padding-left:6px; }
+  .empty .c-name { color:var(--muted); font-size:17px; font-weight:500; }
+  .empty .c-time { color:var(--muted); font-size:13px; }
+
+  /* ---------- 本周课表 ---------- */
+  .wk { border-radius:22px; padding:10px; display:flex; flex-direction:column; }
+  .wk-hd { display:flex; align-items:baseline; flex:none; }
+  .wk-title { font-size:13px; font-weight:600; color:var(--text); }
+  .wk-range { font-size:10px; color:var(--muted); margin-left:auto; }
+  .wk-grid { flex:1; display:grid; grid-template-columns:38px repeat(7,1fr);
+    grid-auto-rows:1fr; margin-top:6px; min-height:0; }
+  .g-hd { font-size:10px; color:var(--muted); text-align:center;
+    display:flex; align-items:center; justify-content:center; }
+  .g-hd.today { color:#fff; background:var(--accent); border-radius:6px; margin:0 1px; }
+  .g-t { display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .g-t b { font-size:9px; font-weight:600; color:var(--muted); line-height:1.1; }
+  .g-t span { font-size:8px; color:var(--muted); line-height:1.1; }
+  .g-c { position:relative; margin:0 1px; min-height:0; }
+  .g-c.band { background:rgba(37,99,235,.14); }
+  .g-block { position:absolute; inset:0; }
+  .g-name { position:relative; z-index:1; font-size:9px; line-height:1.15;
+    padding:2px 1px; text-align:center; word-break:break-all; overflow:hidden; }
+  .wk-exams { flex:1; display:flex; flex-direction:column; gap:9px; margin-top:10px; min-height:0; }
+  .ex-row { display:flex; flex-direction:column; gap:1px; }
+  .ex-line { display:flex; align-items:baseline; }
+  .ex-when { font-size:12px; font-weight:600; color:var(--text); }
+  .ex-clock { font-size:10px; color:var(--muted); margin-left:6px; font-variant-numeric:tabular-nums; }
+  .ex-name { font-size:11px; color:var(--muted); }
+  .ex-empty { font-size:12px; color:var(--muted); }
+
+  /* 桌面示意 */
+  /* 392×850 ≈ 20:9，和真机一致，壁纸按同样的方式裁切 */
+  .phone { width:392px; height:850px; border-radius:26px; overflow:hidden;
+    background:#cfd8cf url("__WALLPAPER__") center/cover no-repeat; padding:18px 18px 10px; }
+  .clock { color:#fff; text-shadow:0 1px 6px rgba(0,0,0,.4); margin-bottom:12px; }
+  .clock b { font-size:44px; font-weight:300; letter-spacing:-1px; }
+  .clock span { font-size:13px; opacity:.95; display:block; margin-top:-4px; }
+  .icons { display:grid; grid-template-columns:repeat(4,1fr); gap:10px 6px; margin-top:14px; }
+  .icon { text-align:center; color:#fff; font-size:10px; text-shadow:0 1px 4px rgba(0,0,0,.45); }
+  .icon i { display:block; width:52px; height:52px; margin:0 auto 4px; border-radius:15px;
+    background:rgba(255,255,255,.34); border:1px solid rgba(255,255,255,.5); }
+  .dock { margin-top:14px; padding:9px 14px; display:flex; justify-content:space-around; }
+  .dock i { display:block; width:50px; height:50px; border-radius:15px;
+    background:rgba(255,255,255,.34); border:1px solid rgba(255,255,255,.5); }
+
+  /* 视觉规范 */
+  .spec { background:var(--page-card); border-radius:14px; padding:16px; }
+  .sw { display:flex; flex-wrap:wrap; gap:10px; }
+  .sw div { width:150px; }
+  .sw i.strip { display:flex; gap:2px; height:20px; padding:0; background:none; }
+  .sw i.strip span { flex:1; border-radius:3px; }
+  .sw i { display:block; height:44px; border-radius:10px; text-align:center;
+    font-size:15px; font-weight:600; line-height:44px; }
+  .sw b { display:block; font-size:12px; margin-top:5px; font-weight:500; }
+  .sw span { color:var(--page-muted); font-size:11px; font-family:ui-monospace,Consolas,monospace; }
+  table.ty { width:100%; border-collapse:collapse; font-size:12px; }
+  table.ty td { padding:6px 0; border-bottom:1px solid var(--line); vertical-align:baseline; }
+  table.ty td:nth-child(2) { color:var(--page-muted); white-space:nowrap; }
+  table.ty td:nth-child(3) { color:var(--page-muted); text-align:right; white-space:nowrap; }
+  .note { background:var(--page-card); border-radius:14px; padding:12px 16px; font-size:12px;
+    color:var(--page-muted); margin-top:14px; }
+  .note b { color:var(--page-text); }
+
+  /* ---- 截图模式：地址栏写 #shot&only=phone|card|week 只留要拍的那一块，方便导出 PNG ---- */
+  body.shot { margin:0; padding:0; background:#fff; }
+  body.shot .page { max-width:none; margin:0; padding:0; }
+  body.shot .page > h1, body.shot .sub, body.shot .tabs, body.shot h2,
+    body.shot .bar, body.shot .note { display:none; }
+  body.shot .panel { display:none; }
+  body.shot .panel.on { display:block; }
+  body.shot .desk { border-radius:0; padding:0; justify-content:flex-start; align-items:flex-start; }
+  body.shot .desk.tall { gap:0; }
+  body.shot .phone { border-radius:0; }
+  /* only=card 只留组件本体（desk1），only=phone 只留桌面实景（desk2），only=week 只留课表 */
+  body.shot.only-card #desk2, body.shot.only-card #desk3, body.shot.only-card #desk4 { display:none; }
+  body.shot.only-phone #desk1, body.shot.only-phone #desk3, body.shot.only-phone #desk4 { display:none; }
+  body.shot.only-week #desk1, body.shot.only-week #desk2, body.shot.only-week #desk4 { display:none; }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>我的课表 · 组件预览</h1>
+  <div class="sub" id="sub">数据生成于 __GENERATED__ ｜ 和手机上小组件是同一套配色与字号</div>
+
+  <div class="tabs">
+    <button data-tab="today" class="on">今日课程</button>
+    <button data-tab="week">本周课表</button>
+    <button data-tab="spec">视觉规范</button>
+  </div>
+
+  <section class="panel on" id="p-today">
+    <h2>模拟时间</h2>
+    <div class="bar">
+      <span class="lab">主题</span><span id="themes1"></span>
+      <span class="lab">色卡</span><span id="palettes1"></span>
+      <span class="lab">星期</span><span id="days"></span>
+    </div>
+    <div class="bar">
+      <span class="lab">周次</span>
+      <input type="number" id="week" min="1" max="30" value="__WEEK__">
+      <span class="lab">时间</span>
+      <input type="time" id="clock" value="10:10">
+      <span id="presets"></span>
+    </div>
+    <div class="bar">
+      <span class="lab">尺寸</span><span id="sizes"></span>
+      <span class="lab">期末周</span><span id="finals1"></span>
+    </div>
+
+    <h2>组件本体（放大 2 倍）</h2>
+    <div class="desk" id="desk1"></div>
+
+    <h2>放到桌面上的样子</h2>
+    <div class="desk tall" id="desk2"></div>
+    <div class="note"><b>图标是占位方块</b>，只用来判断组件和图标、时钟的比例关系，
+      不代表最终图标样式。壁纸按手机的 20:9 居中裁切显示，和真机一致。</div>
+  </section>
+
+  <section class="panel" id="p-week">
+    <h2>本周课表（放大 2 倍）</h2>
+    <div class="bar">
+      <span class="lab">主题</span><span id="themes2"></span>
+      <span class="lab">周次</span><input type="number" id="week2" min="1" max="30" value="__WEEK__">
+      <span class="lab">期末周</span><span id="finals2"></span>
+    </div>
+    <div class="desk" id="desk3"></div>
+
+    <h2>期末周（考试表）</h2>
+    <div class="desk" id="desk4"></div>
+    <div class="note">课块跨节次连成一整块，圆角只出现在首尾；今天整列铺 10% 强调色底。
+      考试表用的是<b>示例考试数据</b>，真机上是你在 App 里录的。</div>
+  </section>
+
+  <section class="panel" id="p-spec">
+    <h2>课程色卡</h2>
+    <div class="bar"><span class="lab">色卡</span><span id="palettes"></span></div>
+    <div class="spec"><div class="sw" id="swatches"></div></div>
+    <h2>四张出厂色卡</h2>
+    <div class="spec"><div class="sw" id="swatchesAll"></div></div>
+    <h2>面板与文字</h2>
+    <div class="spec"><div class="sw" id="surfaces"></div></div>
+    <h2>字号与字重</h2>
+    <div class="spec"><table class="ty" id="typo"></table></div>
+    <div class="note">每张色卡 10 个槽位，<b>每个槽位的 fill/ink 对比度都 ≥ 4.5:1</b>：
+      深底色卡配白字，浅底色卡（马卡龙、明快）配深字。单门课还能在 App 里单独指定颜色，
+      文字色按同一套算法自动配。预览页和真机取色完全一致。</div>
+  </section>
+</div>
+
+<script>
+const DATA = __DATA__;
+/* 四张出厂色卡都灌在 DATA.palettes 里，paletteId 是当前选中的那张。
+   取色和 Java 的 Palette.fillOf()/inkOf() 同一套：自定义颜色 > color 槽位 > 课名 hash 落槽。 */
+const PALETTES = DATA.palettes || [];
+let paletteId = DATA.paletteId || (PALETTES[0] ? PALETTES[0].id : 'default');
+const NAMES = ['周一','周二','周三','周四','周五','周六','周日'];
+const SCALE = 2;
+/* [宽, 高] 单位 dp：4×2 标准 / 2×2 最小 / 4×3 加大 */
+const SIZES = { today: [[328,176],[160,152],[328,248]] };
+const MIN_HEIGHT_FOR_NEXT = 168;
+const COMPACT_WIDTH = 200;
+const WEEK_W = 344, WEEK_H = 344;
+
+/* 和 Java String.hashCode() / Math.floorMod(Math.abs(...)) 对齐，保证手机和预览取到同一个颜色 */
+function hashCode(text) {
+  let h = 0;
+  for (let i = 0; i < text.length; i++) { h = (Math.imul(h, 31) + text.charCodeAt(i)) | 0; }
+  return h;
+}
+function javaAbs(value) { return value === -2147483648 ? -2147483648 : Math.abs(value); }
+function paletteColors() {
+  const found = PALETTES.find(item => item.id === paletteId) || PALETTES[0];
+  return found ? found.colors : [];
+}
+function colorIndexOf(name) {
+  const size = paletteColors().length || 1;
+  return ((javaAbs(hashCode(name)) % size) + size) % size;
+}
+function paletteEntry(course) {
+  if (course && course.colorHex) {
+    return { fill: course.colorHex, ink: autoInk(course.colorHex) };
+  }
+  const colors = paletteColors();
+  const index = (typeof course.color === 'number' && course.color >= 0)
+    ? course.color : colorIndexOf(course.name);
+  return colors[((index % colors.length) + colors.length) % colors.length];
+}
+function courseColor(course) { return paletteEntry(course).fill; }
+function courseInk(course) { return paletteEntry(course).ink; }
+
+/* WCAG 对比度：和 Java 的 Palette.autoInk() 一样，白字黑字挑对比度高的那个 */
+function channel(value) {
+  const scaled = value / 255;
+  return scaled <= 0.03928 ? scaled / 12.92 : Math.pow((scaled + 0.055) / 1.055, 2.4);
+}
+function luminance(hex) {
+  const raw = hex.replace('#', '');
+  const full = raw.length === 3 ? raw.split('').map(c => c + c).join('') : raw;
+  const value = parseInt(full, 16);
+  return 0.2126 * channel((value >> 16) & 255)
+    + 0.7152 * channel((value >> 8) & 255) + 0.0722 * channel(value & 255);
+}
+function contrastRatio(first, second) {
+  const a = luminance(first);
+  const b = luminance(second);
+  return Math.round(((Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05)) * 100) / 100;
+}
+function autoInk(fill) {
+  return contrastRatio(fill, '#FFFFFF') >= contrastRatio(fill, '#000000') ? '#FFFFFF' : '#000000';
+}
+
+function clockToMinutes(text) {
+  const m = /^(\d{1,2}):(\d{2})$/.exec(text || '');
+  return m ? Number(m[1]) * 60 + Number(m[2]) : null;
+}
+function fmt(minutes) {
+  return String(Math.floor(minutes / 60)).padStart(2, '0') + ':' + String(minutes % 60).padStart(2, '0');
+}
+function sectionRange(section) {
+  const raw = DATA.sectionTimes[String(section)];
+  if (!raw) return null;
+  const parts = raw.split('-');
+  const from = clockToMinutes(parts[0]);
+  const to = clockToMinutes(parts[1]);
+  return from === null || to === null ? null : { from, to };
+}
+function sectionBegin(section) { const r = sectionRange(section); return r ? r.from : null; }
+function sectionEnd(section) { const r = sectionRange(section); return r ? r.to : null; }
+function esc(text) {
+  return String(text == null ? '' : text)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function timeRange(course) {
+  const a = sectionRange(course.start), b = sectionRange(course.end);
+  if (!a || !b) return course.start + '—' + course.end + '节';
+  return fmt(a.from) + '—' + fmt(b.to);
+}
+function metaOf(course) {
+  const parts = ['第' + course.start + '-' + course.end + '节', course.room];
+  if (DATA.showTeacher !== false) parts.push(course.teacher);
+  return parts.filter(part => part).join(' · ');
+}
+function coursesAt(day, week) {
+  return DATA.courses
+    .filter(c => c.weekday === day && (!week || c.weekList.includes(week)))
+    .sort((a, b) => a.start - b.start);
+}
+function stateOf(day, week, minutes) {
+  const list = coursesAt(day, week);
+  let current = null, next = null, after = null;
+  for (const c of list) {
+    const begin = sectionBegin(c.start), end = sectionEnd(c.end);
+    if (begin === null || end === null) continue;
+    if (minutes >= begin && minutes <= end) current = c;
+    else if (minutes < begin) { if (!next) next = c; else if (!after) after = c; }
+  }
+  return { list, current, next, after };
+}
+
+/* ---------- 考试（期末周） ---------- */
+function examList() {
+  return (DATA.sampleExams || []).slice()
+    .sort((a, b) => (a.date + a.begin).localeCompare(b.date + b.begin));
+}
+function examWeekday(exam) {
+  // 2027-01-05 这类 ISO 日期 -> 1..7（周一是 1），和 Java LocalDate.getDayOfWeek() 一致
+  const parts = exam.date.split('-').map(Number);
+  const js = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2])).getUTCDay();
+  return js === 0 ? 7 : js;
+}
+function examDateLabel(exam) {
+  const parts = exam.date.split('-').map(Number);
+  return parts[1] + '/' + parts[2];
+}
+function examsOn(day) { return examList().filter(e => examWeekday(e) === day); }
+function examDate(exam) {
+  const parts = exam.date.split('-').map(Number);
+  return new Date(parts[0], parts[1] - 1, parts[2]);
+}
+function examsInWeek(week) {
+  const monday = mondayOfWeek(week);
+  const sunday = new Date(monday.getTime());
+  sunday.setDate(monday.getDate() + 6);
+  return examList().filter(e => {
+    const when = examDate(e);
+    return when >= monday && when <= sunday;
+  });
+}
+
+/* ---------- 今日课程 ---------- */
+function pill(text) { return text ? `<div class="pill">${esc(text)}</div>` : ''; }
+function heroBlock(course, barColor, name, time, meta, extra) {
+  return `<div class="hero"><div class="bar4" style="background:${barColor}"></div>`
+    + `<div class="hero-txt"><div class="c-name">${esc(name)}</div>`
+    + `<div class="c-time">${esc(time)}</div>`
+    + `<div class="c-meta">${esc(meta)}</div></div></div>${extra || ''}`;
+}
+/* 预览页的「今天」：把选中的星期落到本周（或选中周次）那一天，日期跟着星期一起走，
+   免得出现「周三 9/22」这种真实日历里不存在的组合。 */
+function mockMonthDay(week) {
+  const monday = mondayOfWeek(week > 0 ? week : DATA.defaultWeek);
+  const date = new Date(monday.getTime());
+  date.setDate(monday.getDate() + (day - 1));
+  return (date.getMonth() + 1) + '/' + date.getDate();
+}function todayMarkup(state, minutes, week, showNext, compact, finals) {
+  const header = (compact || !week ? '' : `第 ${week} 周 · `) + `${NAMES[day - 1]} ${mockMonthDay(week)}`;
+  if (finals) return finalsToday(header, minutes, showNext, compact);
+
+  if (state.current) {
+    const end = sectionEnd(state.current.end), begin = sectionBegin(state.current.start);
+    const left = Math.max(0, end - minutes);
+    const total = Math.max(1, end - begin);
+    const percent = Math.max(0, Math.min(100, Math.round((minutes - begin) * 100 / total)));
+    const status = compact ? '在课'
+      : `在课 · ${left <= 0 ? '就要下课' : '还剩 ' + left + ' 分钟'}`;
+    const extra = `<div class="prog"><i style="width:${percent}%"></i></div>`;
+    return hd(header, pill(status))
+      + `<div class="t-body">${heroBlock(state.current, courseColor(state.current),
+          state.current.name, timeRange(state.current), metaOf(state.current), extra)}</div>`
+      + nextArea(showNext && state.next ? nextRow(state.next, '下一节') : '');
+  }
+  if (state.next) {
+    const begin = sectionBegin(state.next.start);
+    const status = compact ? '下一节'
+      : `下一节 · ${Math.max(0, begin - minutes)} 分钟后上课`;
+    return hd(header, pill(status))
+      + `<div class="t-body">${heroBlock(state.next, courseColor(state.next),
+          state.next.name, timeRange(state.next), metaOf(state.next), '')}</div>`
+      + nextArea(showNext && state.after ? nextRow(state.after, '再下一节') : '');
+  }
+  return hd(header, '')
+    + `<div class="t-body"><div class="hero empty"><div class="hero-txt" style="padding-left:0">`
+    + `<div class="c-name">${state.list.length ? '今天的课已经上完了' : '今天没有课'}</div>`
+    + `<div class="c-time">好好休息</div></div></div></div>`
+    + nextArea('');
+}
+function finalsToday(header, minutes, showNext, compact) {
+  const today = examsOn(day);
+  const upcoming = examList().find(e => {
+    if (examWeekday(e) !== day) return clockToMinutes(e.begin) > minutes;
+    return clockToMinutes(e.end) > minutes;
+  });
+  const running = today.find(e => minutes >= clockToMinutes(e.begin) && minutes <= clockToMinutes(e.end));
+  const later = today.find(e => clockToMinutes(e.begin) > minutes);
+  const target = running || later || upcoming;
+  if (!target) {
+    return hd(header, '')
+      + `<div class="t-body"><div class="hero empty"><div class="hero-txt" style="padding-left:0">`
+      + `<div class="c-name">今天没有考试</div><div class="c-time">好好复习</div></div></div></div>`
+      + nextArea('');
+  }
+  const begin = clockToMinutes(target.begin), end = clockToMinutes(target.end);
+  let status = '下一场考试', extra = '';
+  if (running) {
+    status = `考试中 · ${Math.max(0, end - minutes)} 分钟后结束`;
+    const total = Math.max(1, end - begin);
+    const percent = Math.max(0, Math.min(100, Math.round((minutes - begin) * 100 / total)));
+    extra = `<div class="prog"><i style="width:${percent}%"></i></div>`;
+  } else if (later) {
+    const left = Math.max(0, begin - minutes);
+    status = left >= 60 ? `距考试 ${Math.round(left / 60)} 小时` : `距考试 ${left} 分钟`;
+  } else {
+    status = `${examDateLabel(target)} 开考`;
+  }
+  const coming = examList().find(e => (e.date + e.begin) > (target.date + target.begin));
+  const when = running || later ? '' : `${examWeekday(target) === day ? '' : NAMES[examWeekday(target) - 1] + ' '}${examDateLabel(target)}`;
+  const nextHtml = showNext && coming
+    ? `<div class="next"><div class="n-lab">下一场</div>`
+      + `<div class="n-name">${esc(coming.name)}</div>`
+      + `<div class="n-time">${esc(examDateLabel(coming))}</div>`
+      + `<div class="n-room">${esc(coming.begin)}</div></div>` : '';
+  return hd(header + (when ? ' · ' + when : ''), compact ? '' : pill(status))
+    + `<div class="t-body">${heroBlock(target, 'var(--accent)', target.name,
+        target.begin + '—' + target.end, target.room, extra)}</div>`
+    + nextArea(nextHtml);
+}
+function hd(header, statusHtml) {
+  return `<div class="t-hd"><div class="hd">${esc(header)}</div>${statusHtml}</div>`;
+}
+function nextArea(html) { return html ? `<div class="t-next">${html}</div>` : ''; }
+function nextRow(course, label) {
+  return `<div class="next"><div class="n-lab">${label}</div>`
+    + `<div class="n-name">${esc(course.name)}</div>`
+    + `<div class="n-time">${esc(fmt(sectionBegin(course.start)))}</div>`
+    + `<div class="n-room">${esc(course.room)}</div></div>`;
+}
+
+/* ---------- 本周课表 ---------- */
+function mondayOfWeek(week) {
+  const now = new Date();
+  const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  monday.setDate(monday.getDate() - ((now.getDay() + 6) % 7) + (week - DATA.defaultWeek) * 7);
+  return monday;
+}
+function weekRangeLabel(week) {
+  const monday = mondayOfWeek(week);
+  const sunday = new Date(monday.getTime());
+  sunday.setDate(monday.getDate() + 6);
+  const label = date => (date.getMonth() + 1) + '/' + date.getDate();
+  return label(monday) + '–' + label(sunday);
+}
+function weekMock(week, finals) {
+  if (finals) return examWeekMock(week);
+  const all = DATA.courses.filter(c => (c.weekList || []).includes(week));
+  const maxSection = Math.min(12, all.reduce((max, c) => Math.max(max, c.end), 1));
+  let html = `<div class="wk" style="width:${WEEK_W}px;height:${WEEK_H}px">`
+    + `<div class="wk-hd"><div class="wk-title">第 ${week} 周</div>`
+    + `<div class="wk-range">${weekRangeLabel(week)}</div></div><div class="wk-grid"><div></div>`;
+  for (let i = 1; i <= 7; i++) {
+    html += `<div class="g-hd${i === day ? ' today' : ''}">${NAMES[i - 1]}</div>`;
+  }
+  for (let s = 1; s <= maxSection; s++) {
+    const begin = sectionBegin(s);
+    html += `<div class="g-t"><b>${s}</b>${begin === null ? '' : '<span>' + fmt(begin) + '</span>'}</div>`;
+    for (let d = 1; d <= 7; d++) {
+      const hit = all.filter(c => c.weekday === d && s >= c.start && s <= c.end)
+        .sort((a, b) => (b.start === s) - (a.start === s) || b.start - a.start)[0];
+      const band = d === day ? ' band' : '';
+      if (!hit) { html += `<div class="g-c${band}"></div>`; continue; }
+      const radius = hit.start === hit.end ? '6px' : (s === hit.start ? '6px 6px 0 0'
+        : (s === hit.end ? '0 0 6px 6px' : '0'));
+      const rows = Math.min(2, hit.end - hit.start + 1);
+      const name = hit.start === s
+        ? `<div class="g-name" style="color:${courseInk(hit)};-webkit-line-clamp:${rows};`
+          + `display:-webkit-box;-webkit-box-orient:vertical">${esc(hit.name)}</div>` : '';
+      html += `<div class="g-c${band}"><div class="g-block" style="background:${courseColor(hit)};`
+        + `border-radius:${radius}"></div>${name}</div>`;
+    }
+  }
+  return html + `</div></div>`;
+}
+function examWeekMock(week) {
+  const list = examsInWeek(week);
+  let html = `<div class="wk" style="width:${WEEK_W}px;height:${WEEK_H}px">`
+    + `<div class="wk-hd"><div class="wk-title">期末考试</div>`
+    + `<div class="wk-range">${weekRangeLabel(week)}</div></div>`
+    + `<div class="wk-exams">`;
+  if (!list.length) {
+    html += `<div class="ex-empty">本周没有考试安排</div>`;
+  } else {
+    for (const exam of list.slice(0, 6)) {
+      html += `<div class="ex-row">`
+        + `<div class="ex-line"><div class="ex-when">${NAMES[examWeekday(exam) - 1]} ${examDateLabel(exam)}</div>`
+        + `<div class="ex-clock">${exam.begin}–${exam.end}</div></div>`
+        + `<div class="ex-name">${esc(exam.name)}${exam.room ? ' · ' + esc(exam.room) : ''}</div></div>`;
+    }
+    if (list.length > 6) html += `<div class="ex-empty">还有 ${list.length - 6} 场…</div>`;
+  }
+  return html + `</div></div>`;
+}
+
+function desktop(minutes, week, showNext) {
+  const state = stateOf(day, week, minutes);
+  return `<div class="phone">
+    <div class="clock"><b>${fmt(minutes)}</b><span>${NAMES[day - 1]} ${mockMonthDay(week)}</span></div>
+    <div class="slot" style="width:328px;height:168px">
+      <div class="mock" style="width:328px;height:176px">
+        ${todayMarkup(state, minutes, week, showNext, false, finalsMode)}
+      </div>
+    </div>
+    <div class="icons">${[0, 1, 2, 3].map(_ => '<div class="icon"><i></i>占位</div>').join('')}</div>
+    <div class="dock"><i></i><i></i><i></i><i></i></div>
+  </div>`;
+}
+function slot(html, width, height, scale, cls) {
+  return `<div class="slot" style="width:${width * scale}px;height:${height * scale}px">
+    <div class="${cls || 'mock'}" style="width:${width}px;height:${height}px;`
+    + `transform:scale(${scale})">${html}</div></div>`;
+}
+
+/* ---------- 视觉规范 ---------- */
+const SURFACES = [
+  ['面板 · 浅色', 'rgba(255,255,255,.92)', 'widget_bg_light'],
+  ['面板 · 深色', 'rgba(23,26,32,.92)', 'widget_bg_dark'],
+  ['主文字', '#111827', 'text_primary_light'],
+  ['次文字', '#3F4A5A', 'text_secondary_light'],
+  ['强调色', '#2563EB', 'accent'],
+  ['强调色（文字）', '#1E40AF', 'accent_text'],
+  ['今天整列', 'rgba(37,99,235,.14)', 'accent_soft'],
+  ['分隔线', 'rgba(17,24,39,.12)', 'divider_light'],
+];
+const TYPO = [
+  ['课名（今日组件）', '20sp / SemiBold', '全屏唯一大字'],
+  ['课名（期末周）', '20sp / SemiBold', '考试科目'],
+  ['上课时间', '14sp / Regular / 等宽数字', '第二层'],
+  ['教室 · 教师 · 节次', '12sp / Regular', '次文字'],
+  ['周标题 / 表头', '13sp SemiBold / 10sp', '第 N 周 + 日期区间'],
+  ['课块文字', '9sp / Regular / 行高 1.15', '最多 2 行，白字或深字'],
+  ['节次时间', '9sp / 8sp', '左侧时间列'],
+  ['状态药丸 / NEXT 标签', '10sp / Medium', '实心强调色 + 白字'],
+];
+
+let day = DATA.todayWeekday;
+let sizeIndex = 0;
+let minutes = clockToMinutes(document.getElementById('clock').value);
+let theme = 'light';
+let finalsMode = false;
+
+function applyHashState() {
+  const parts = location.hash.replace(/^#/, '').split('&');
+  if (parts[0] === 'shot') document.body.classList.add('shot');
+  for (const part of parts.slice(1)) {
+    const [key, value] = part.split('=');
+    if (key === 'd') day = Math.min(7, Math.max(1, Number(value)));
+    if (key === 't') { const parsed = clockToMinutes(value); if (parsed !== null) minutes = parsed; }
+    if (key === 'w') { document.getElementById('week').value = value;
+      document.getElementById('week2').value = value; }
+    if (key === 's') sizeIndex = Math.min(SIZES.today.length - 1, Math.max(0, Number(value)));
+    if (key === 'th') theme = value;
+    if (key === 'finals') finalsMode = value === '1';
+    if (key === 'pal' && PALETTES.some(item => item.id === value)) paletteId = value;
+    if (key === 'only') document.body.classList.add('only-' + value);
+    if (key === 'tab') activateTab(value);
+  }
+  document.getElementById('clock').value = fmt(minutes);
+}
+
+function syncTheme() { document.body.classList.toggle('dark', theme === 'dark'); }
+
+function draw() {
+  const week = Math.max(0, Number(document.getElementById('week').value) || 0);
+  const week2 = Math.max(1, Number(document.getElementById('week2').value) || 1);
+  const state = stateOf(day, week, minutes);
+  const [width, height] = SIZES.today[sizeIndex];
+  const showNext = height >= MIN_HEIGHT_FOR_NEXT;
+  const compact = width < COMPACT_WIDTH;
+  document.getElementById('desk1').innerHTML =
+    slot(todayMarkup(state, minutes, week, showNext, compact, finalsMode), width, height, SCALE);
+  document.getElementById('desk2').innerHTML = desktop(minutes, week, true);
+  document.getElementById('desk3').innerHTML =
+    slot(weekMock(week2, finalsMode), WEEK_W, WEEK_H, SCALE, 'mocklet');
+  document.getElementById('desk4').innerHTML =
+    slot(weekMock(week2, true), WEEK_W, WEEK_H, SCALE, 'mocklet');
+  mark('#days button', b => Number(b.dataset.day) === day);
+  mark('#sizes button', b => Number(b.dataset.size) === sizeIndex);
+  mark('#presets button', b => b.dataset.minutes === String(minutes));
+  ['#themes1', '#themes2'].forEach(sel =>
+    mark(sel + ' button', b => b.dataset.theme === theme));
+  ['#finals1', '#finals2'].forEach(sel =>
+    mark(sel + ' button', b => (b.dataset.finals === '1') === finalsMode));
+}
+function mark(selector, predicate) {
+  document.querySelectorAll(selector).forEach(button =>
+    button.classList.toggle('on', predicate(button)));
+}
+
+document.getElementById('days').innerHTML = NAMES
+  .map((name, index) => `<button data-day="${index + 1}">${name}</button>`).join('');
+document.getElementById('sizes').innerHTML = ['4×2 标准', '2×2 最小', '4×3 加大']
+  .map((label, index) => `<button data-size="${index}">${label}</button>`).join('');
+document.getElementById('presets').innerHTML = [
+  ['10:10 在课', 610], ['12:00 课间', 720], ['14:00 在课', 840], ['19:00 已上完', 1140],
+].map(([label, value]) => `<button data-minutes="${value}">${label}</button>`).join('');
+['#themes1', '#themes2'].forEach(selector => {
+  document.querySelector(selector).innerHTML =
+    ['浅色', '深色'].map((label, index) =>
+      `<button data-theme="${index ? 'dark' : 'light'}">${label}</button>`).join('');
+});
+['#finals1', '#finals2'].forEach(selector => {
+  document.querySelector(selector).innerHTML =
+    `<button data-finals="0">关闭</button><button data-finals="1">开启</button>`;
+});
+function paintSpec() {
+  const buttons = PALETTES.map(item =>
+    `<button data-palette="${item.id}"${item.id === paletteId ? ' class="on"' : ''}>${item.name}</button>`
+  ).join('');
+  ['#palettes1', '#palettes'].forEach(selector => {
+    document.querySelector(selector).innerHTML = buttons;
+  });
+  document.getElementById('swatches').innerHTML = paletteColors()
+    .map((entry, index) => {
+      const who = entry.ink.toUpperCase() === '#FFFFFF' ? '白字' : '深字';
+      return `<div><i style="background:${entry.fill};color:${entry.ink}">Aa</i>`
+        + `<b>槽 [${index}]</b><span>${entry.fill} + ${entry.ink} · ${who} `
+        + `${contrastRatio(entry.fill, entry.ink)}:1</span></div>`;
+    }).join('');
+  document.getElementById('swatchesAll').innerHTML = PALETTES
+    .map(item => `<div><b>${item.name}</b><i class="strip">`
+      + item.colors.map(color => `<span style="background:${color.fill}"></span>`).join('')
+      + '</i></div>').join('');
+}
+document.getElementById('surfaces').innerHTML = SURFACES
+  .map(([name, value, token]) =>
+    `<div><i style="background:${value}"></i><b>${name}</b><span>${token}</span></div>`).join('');
+document.getElementById('typo').innerHTML = TYPO
+  .map(row => '<tr>' + row.map(cell => `<td>${cell}</td>`).join('') + '</tr>').join('');
+
+document.getElementById('days').addEventListener('click', event => {
+  const button = event.target.closest('button');
+  if (button) { day = Number(button.dataset.day); render(); }
+});
+document.getElementById('sizes').addEventListener('click', event => {
+  const button = event.target.closest('button');
+  if (button) { sizeIndex = Number(button.dataset.size); render(); }
+});
+document.getElementById('presets').addEventListener('click', event => {
+  const button = event.target.closest('button');
+  if (!button) return;
+  minutes = Number(button.dataset.minutes);
+  document.getElementById('clock').value = fmt(minutes);
+  render();
+});
+['#themes1', '#themes2'].forEach(selector => {
+  document.querySelector(selector).addEventListener('click', event => {
+    const button = event.target.closest('button');
+    if (button) { theme = button.dataset.theme; render(); }
+  });
+});
+['#finals1', '#finals2'].forEach(selector => {
+  document.querySelector(selector).addEventListener('click', event => {
+    const button = event.target.closest('button');
+    if (button) { finalsMode = button.dataset.finals === '1'; render(); }
+  });
+});
+['#palettes1', '#palettes'].forEach(selector => {
+  document.querySelector(selector).addEventListener('click', event => {
+    const button = event.target.closest('button');
+    if (!button) return;
+    paletteId = button.dataset.palette;
+    paintSpec();
+    render();
+  });
+});
+document.getElementById('clock').addEventListener('input', event => {
+  const value = clockToMinutes(event.target.value);
+  if (value !== null) { minutes = value; render(); }
+});
+['week', 'week2'].forEach(id => document.getElementById(id).addEventListener('change', render));
+function activateTab(name) {
+  if (!document.getElementById('p-' + name)) return;
+  document.querySelectorAll('.tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === name));
+  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('on', p.id === 'p-' + name));
+}
+document.querySelectorAll('.tabs button').forEach(button => {
+  button.addEventListener('click', () => {
+    activateTab(button.dataset.tab);
+    location.hash = button.dataset.tab;
+  });
+});
+function render() { syncTheme(); draw(); }
+DATA.defaultWeek = Number(new URLSearchParams(location.hash.replace(/^#/, '')).get('w') || __WEEK__);
+applyHashState();
+paintSpec();
+render();
+</script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 {
+  "version": 3,
   "semesterStart": "",
-  "generatedAt": "2026-01-01 00:00:00",
+  "generatedAt": "2026-09-23 00:15:17",
   "sectionTimes": {
     "1": "08:00-08:45",
     "2": "08:50-09:35",
@@ -15,14 +16,246 @@
     "11": "18:30-19:15",
     "12": "19:20-20:05"
   },
+  "paletteId": "default",
+  "palettes": [
+    {
+      "id": "default",
+      "name": "默认 · 深色底白字",
+      "colors": [
+        {
+          "fill": "#2563EB",
+          "ink": "#FFFFFF"
+        },
+        {
+          "fill": "#5B54D6",
+          "ink": "#FFFFFF"
+        },
+        {
+          "fill": "#8E45CC",
+          "ink": "#FFFFFF"
+        },
+        {
+          "fill": "#C13C93",
+          "ink": "#FFFFFF"
+        },
+        {
+          "fill": "#C93A46",
+          "ink": "#FFFFFF"
+        },
+        {
+          "fill": "#B3541E",
+          "ink": "#FFFFFF"
+        },
+        {
+          "fill": "#E0A63C",
+          "ink": "#2A1D04"
+        },
+        {
+          "fill": "#23713F",
+          "ink": "#FFFFFF"
+        },
+        {
+          "fill": "#17706E",
+          "ink": "#FFFFFF"
+        },
+        {
+          "fill": "#7EA9C4",
+          "ink": "#0F2230"
+        }
+      ]
+    },
+    {
+      "id": "morandi",
+      "name": "莫兰迪 · 低饱和",
+      "colors": [
+        {
+          "fill": "#5C6B7A",
+          "ink": "#FFFFFF"
+        },
+        {
+          "fill": "#6E5F7A",
+          "ink": "#FFFFFF"
+        },
+        {
+          "fill": "#7A5F5A",
+          "ink": "#FFFFFF"
+        },
+        {
+          "fill": "#5F7A6B",
+          "ink": "#FFFFFF"
+        },
+        {
+          "fill": "#7A6B5C",
+          "ink": "#FFFFFF"
+        },
+        {
+          "fill": "#4F5B66",
+          "ink": "#FFFFFF"
+        },
+        {
+          "fill": "#7F6A4E",
+          "ink": "#FFFFFF"
+        },
+        {
+          "fill": "#55707A",
+          "ink": "#FFFFFF"
+        },
+        {
+          "fill": "#6B5F7A",
+          "ink": "#FFFFFF"
+        },
+        {
+          "fill": "#7A6E63",
+          "ink": "#FFFFFF"
+        }
+      ]
+    },
+    {
+      "id": "macaron",
+      "name": "马卡龙 · 浅底深字",
+      "colors": [
+        {
+          "fill": "#F2C4C4",
+          "ink": "#2E241C"
+        },
+        {
+          "fill": "#F7DCA8",
+          "ink": "#2E241C"
+        },
+        {
+          "fill": "#CFE6C4",
+          "ink": "#2E241C"
+        },
+        {
+          "fill": "#B8DCE8",
+          "ink": "#2E241C"
+        },
+        {
+          "fill": "#D2CBEF",
+          "ink": "#2E241C"
+        },
+        {
+          "fill": "#F4CBDD",
+          "ink": "#2E241C"
+        },
+        {
+          "fill": "#DCE6B4",
+          "ink": "#2E241C"
+        },
+        {
+          "fill": "#C7E4DD",
+          "ink": "#2E241C"
+        },
+        {
+          "fill": "#F5D6B8",
+          "ink": "#2E241C"
+        },
+        {
+          "fill": "#DAD5EC",
+          "ink": "#2E241C"
+        }
+      ]
+    },
+    {
+      "id": "bright",
+      "name": "明快 · 亮底深字",
+      "colors": [
+        {
+          "fill": "#60A5FA",
+          "ink": "#0B1220"
+        },
+        {
+          "fill": "#818CF8",
+          "ink": "#0B1220"
+        },
+        {
+          "fill": "#C084FC",
+          "ink": "#0B1220"
+        },
+        {
+          "fill": "#F472B6",
+          "ink": "#0B1220"
+        },
+        {
+          "fill": "#F87171",
+          "ink": "#0B1220"
+        },
+        {
+          "fill": "#FB923C",
+          "ink": "#0B1220"
+        },
+        {
+          "fill": "#FACC15",
+          "ink": "#0B1220"
+        },
+        {
+          "fill": "#4ADE80",
+          "ink": "#0B1220"
+        },
+        {
+          "fill": "#2DD4BF",
+          "ink": "#0B1220"
+        },
+        {
+          "fill": "#38BDF8",
+          "ink": "#0B1220"
+        }
+      ]
+    }
+  ],
+  "courseColors": [
+    {
+      "fill": "#2563EB",
+      "ink": "#FFFFFF"
+    },
+    {
+      "fill": "#5B54D6",
+      "ink": "#FFFFFF"
+    },
+    {
+      "fill": "#8E45CC",
+      "ink": "#FFFFFF"
+    },
+    {
+      "fill": "#C13C93",
+      "ink": "#FFFFFF"
+    },
+    {
+      "fill": "#C93A46",
+      "ink": "#FFFFFF"
+    },
+    {
+      "fill": "#B3541E",
+      "ink": "#FFFFFF"
+    },
+    {
+      "fill": "#E0A63C",
+      "ink": "#2A1D04"
+    },
+    {
+      "fill": "#23713F",
+      "ink": "#FFFFFF"
+    },
+    {
+      "fill": "#17706E",
+      "ink": "#FFFFFF"
+    },
+    {
+      "fill": "#7EA9C4",
+      "ink": "#0F2230"
+    }
+  ],
+  "semesterWeeks": 20,
+  "finalsStartWeek": 0,
+  "exams": [],
   "courses": [
     {
-      "name": "示例课程一",
+      "name": "线性代数",
       "weekday": 1,
       "start": 1,
       "end": 2,
-      "teacher": "示例老师甲",
-      "room": "示例楼101",
+      "teacher": "郭翠平",
+      "room": "综合楼504",
       "weeks": "1-9",
       "weekList": [
         1,
@@ -34,15 +267,88 @@
         7,
         8,
         9
-      ]
+      ],
+      "id": "c1",
+      "color": -1,
+      "colorHex": ""
     },
     {
-      "name": "示例课程二",
+      "name": "模拟电子技术",
+      "weekday": 1,
+      "start": 3,
+      "end": 4,
+      "teacher": "杨京辉",
+      "room": "综合楼702",
+      "weeks": "1-3、8-15、06",
+      "weekList": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "id": "c2",
+      "color": -1,
+      "colorHex": ""
+    },
+    {
+      "name": "面向对象编程实践",
+      "weekday": 1,
+      "start": 6,
+      "end": 9,
+      "teacher": "管健",
+      "room": "科研楼B103",
+      "weeks": "12-16",
+      "weekList": [
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "id": "c3",
+      "color": -1,
+      "colorHex": ""
+    },
+    {
+      "name": "马克思主义基本原理",
+      "weekday": 1,
+      "start": 8,
+      "end": 9,
+      "teacher": "孙梅晓",
+      "room": "综合楼402",
+      "weeks": "1-11",
+      "weekList": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "id": "c4",
+      "color": -1,
+      "colorHex": ""
+    },
+    {
+      "name": "数字电子技术",
       "weekday": 2,
-      "start": 1,
-      "end": 2,
-      "teacher": "示例老师乙",
-      "room": "示例楼202",
+      "start": 3,
+      "end": 5,
+      "teacher": "刘伟",
+      "room": "综合楼704",
       "weeks": "10-17",
       "weekList": [
         10,
@@ -53,15 +359,282 @@
         15,
         16,
         17
-      ]
+      ],
+      "id": "c5",
+      "color": -1,
+      "colorHex": ""
     },
     {
-      "name": "示例课程三",
+      "name": "形势与政策(3)",
+      "weekday": 2,
+      "start": 6,
+      "end": 9,
+      "teacher": "杨润聪",
+      "room": "",
+      "weeks": "10",
+      "weekList": [
+        10
+      ],
+      "id": "c6",
+      "color": -1,
+      "colorHex": ""
+    },
+    {
+      "name": "模拟电子技术",
+      "weekday": 2,
+      "start": 6,
+      "end": 7,
+      "teacher": "杨京辉",
+      "room": "综合楼403",
+      "weeks": "13-15单、07、09",
+      "weekList": [
+        7,
+        9,
+        13,
+        15
+      ],
+      "id": "c7",
+      "color": -1,
+      "colorHex": ""
+    },
+    {
+      "name": "数字电子技术实验",
+      "weekday": 3,
+      "start": 1,
+      "end": 4,
+      "teacher": "刘伟",
+      "room": "实验室科-1202",
+      "weeks": "14-17",
+      "weekList": [
+        14,
+        15,
+        16,
+        17
+      ],
+      "id": "c8",
+      "color": -1,
+      "colorHex": ""
+    },
+    {
+      "name": "复变函数与积分变换",
       "weekday": 3,
       "start": 3,
       "end": 4,
-      "teacher": "示例老师丙",
-      "room": "示例楼303",
+      "teacher": "赵悦彤",
+      "room": "综合楼804",
+      "weeks": "1-13",
+      "weekList": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "id": "c9",
+      "color": -1,
+      "colorHex": ""
+    },
+    {
+      "name": "大学物理(2)",
+      "weekday": 3,
+      "start": 6,
+      "end": 7,
+      "teacher": "田丁",
+      "room": "综合楼601",
+      "weeks": "1-13",
+      "weekList": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "id": "c10",
+      "color": -1,
+      "colorHex": ""
+    },
+    {
+      "name": "面向对象编程实践",
+      "weekday": 3,
+      "start": 6,
+      "end": 9,
+      "teacher": "管健",
+      "room": "科研楼B103",
+      "weeks": "14-16",
+      "weekList": [
+        14,
+        15,
+        16
+      ],
+      "id": "c11",
+      "color": -1,
+      "colorHex": ""
+    },
+    {
+      "name": "线性代数",
+      "weekday": 4,
+      "start": 3,
+      "end": 4,
+      "teacher": "郭翠平",
+      "room": "综合楼504",
+      "weeks": "1-9",
+      "weekList": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "id": "c12",
+      "color": -1,
+      "colorHex": ""
+    },
+    {
+      "name": "模拟电子技术实验",
+      "weekday": 4,
+      "start": 6,
+      "end": 9,
+      "teacher": "杨京辉",
+      "room": "实验室科-1202",
+      "weeks": "14-17",
+      "weekList": [
+        14,
+        15,
+        16,
+        17
+      ],
+      "id": "c13",
+      "color": -1,
+      "colorHex": ""
+    },
+    {
+      "name": "马克思主义基本原理",
+      "weekday": 4,
+      "start": 6,
+      "end": 7,
+      "teacher": "孙梅晓",
+      "room": "综合楼402",
+      "weeks": "1-11",
+      "weekList": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "id": "c14",
+      "color": -1,
+      "colorHex": ""
+    },
+    {
+      "name": "模拟电子技术",
+      "weekday": 4,
+      "start": 8,
+      "end": 9,
+      "teacher": "杨京辉",
+      "room": "综合楼403",
+      "weeks": "1-13",
+      "weekList": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "id": "c15",
+      "color": -1,
+      "colorHex": ""
+    },
+    {
+      "name": "复变函数与积分变换",
+      "weekday": 5,
+      "start": 1,
+      "end": 2,
+      "teacher": "赵悦彤",
+      "room": "综合楼804",
+      "weeks": "1-13",
+      "weekList": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "id": "c16",
+      "color": -1,
+      "colorHex": ""
+    },
+    {
+      "name": "数字电子技术",
+      "weekday": 5,
+      "start": 3,
+      "end": 5,
+      "teacher": "刘伟",
+      "room": "综合楼703",
+      "weeks": "10-17",
+      "weekList": [
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "id": "c17",
+      "color": -1,
+      "colorHex": ""
+    },
+    {
+      "name": "体育(3)(系列课程)",
+      "weekday": 5,
+      "start": 6,
+      "end": 7,
+      "teacher": "李文博",
+      "room": "形体房",
       "weeks": "1-16",
       "weekList": [
         1,
@@ -80,7 +653,39 @@
         14,
         15,
         16
-      ]
+      ],
+      "id": "c18",
+      "color": -1,
+      "colorHex": ""
+    },
+    {
+      "name": "大学物理(2)",
+      "weekday": 5,
+      "start": 8,
+      "end": 9,
+      "teacher": "田丁",
+      "room": "综合楼601",
+      "weeks": "1-15",
+      "weekList": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "id": "c19",
+      "color": -1,
+      "colorHex": ""
     }
   ]
 }

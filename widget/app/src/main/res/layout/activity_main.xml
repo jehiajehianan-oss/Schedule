@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  主界面：顶部状态 → 设置 → 数据 → 课程列表（按星期分组）→ 考试列表。
+  颜色一律走 ?android:textColor*，深浅色主题跟着 Activity 的 setTheme() 自动变。
+-->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -13,7 +17,8 @@
             android:id="@+id/txt_week"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="17sp"
             android:textStyle="bold" />
 
         <TextView
@@ -21,12 +26,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:textColor="?android:attr/textColorSecondary"
             android:textSize="13sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <Button
@@ -34,22 +40,79 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="设置开学日期" />
+                android:text="开学日期" />
 
             <Button
-                android:id="@+id/btn_refresh"
+                android:id="@+id/btn_section_times"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:text="刷新小组件" />
-
+                android:text="作息时间" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_semester_weeks"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="学期周数" />
+
+            <Button
+                android:id="@+id/btn_finals_week"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:text="期末周" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_theme"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="主题" />
+
+            <Button
+                android:id="@+id/btn_refresh"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:text="刷新小组件" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_palette"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="色卡" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:orientation="horizontal">
 
             <Button
@@ -63,19 +126,27 @@
                 android:id="@+id/btn_reset"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:text="恢复内置数据" />
-
         </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:text="本学期课程"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="15sp"
             android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="点一条改，长按删掉。"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="12sp" />
 
         <LinearLayout
             android:id="@+id/list_container"
@@ -84,6 +155,43 @@
             android:layout_marginTop="6dp"
             android:orientation="vertical" />
 
-    </LinearLayout>
+        <Button
+            android:id="@+id/btn_add_course"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="＋ 添加课程" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="期末考试"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="期末周里两个小组件都切成考试：今日课程显示考试进度，本周课表显示考试表。"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:id="@+id/exam_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:orientation="vertical" />
+
+        <Button
+            android:id="@+id/btn_add_exam"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="＋ 添加考试" />
+
+    </LinearLayout>
 </ScrollView>

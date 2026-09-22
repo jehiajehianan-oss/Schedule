@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  权限列表刻意保持为空：没有 INTERNET、没有 SCHEDULE_EXACT_ALARM、没有 WAKE_LOCK。
+  翻页闹钟走 AlarmManager.setAndAllowWhileIdle，它在低电耗模式下也能唤醒而且不要权限，
+  代价是系统可能把触发时间浮动几分钟（见 WidgetAlarm 的注释）。
+-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
@@ -19,6 +24,7 @@
 
         <receiver
             android:name=".TodayWidgetProvider"
+            android:label="@string/widget_today_label"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -30,6 +36,7 @@
 
         <receiver
             android:name=".WeekWidgetProvider"
+            android:label="@string/widget_week_label"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -38,6 +45,14 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_week_info" />
         </receiver>
+
+        <!--
+          翻页闹钟的接收方：到「下一节课开始」「当前课结束」「上课中每分钟」这几个时刻
+          刷一次小组件，并顺手把下一次排上。只在有小组件在桌面上时才会被排到。
+        -->
+        <receiver
+            android:name=".WidgetAlarmReceiver"
+            android:exported="false" />
     </application>
 
 </manifest>

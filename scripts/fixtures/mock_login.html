@@ -1,0 +1,22 @@
+<!-- 自测用的假登录页：模仿统一身份认证的结构（含一个隐藏表单），账号密码全是编的 -->
+<html><head><meta charset="utf-8"><title>Mock 登录页（自测用）</title></head><body>
+<div id="hidden-form" style="display:none">
+  <form action="/login" method="post">
+    <input type="text" name="username" value="">
+    <input type="password" name="password" value="">
+    <input type="submit" value="登录">
+  </form>
+</div>
+<div id="real-form" style="display:block">
+  <form id="loginForm" action="/login" method="post">
+    <input type="text" id="username" name="username" placeholder="学号/账号" autocomplete="off">
+    <input type="password" id="password" name="password" placeholder="密码" autocomplete="off">
+    <input type="hidden" name="execution" value="MOCK-ONE-TIME-TOKEN">
+    <input type="hidden" name="loginType" value="username">
+    <input type="button" id="enterBtn" value="登录" onclick="javascript:doLogin()">
+  </form>
+</div>
+<script>
+function doLogin(){ document.title = '登录中（mock，不做任何真实请求）'; }
+</script>
+</body></html>

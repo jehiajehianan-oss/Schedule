@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ic_launcher_background">#FF2F6FED</color>
+    <color name="ic_launcher_background">#FF2563EB</color>
 
-    <!-- 强调色：跟随 MagicOS 系统蓝，全组件只有这一种彩色 -->
-    <color name="accent">#FF2F6FED</color>
-    <!-- 强调色当文字用时压深一档：10sp 小字在半透明面板上要到 4.5:1 -->
-    <color name="accent_text">#FF1E3A8A</color>
-    <color name="accent_soft">#142F6FED</color>
+    <!-- 强调色：和壁纸上的系统蓝同源，全组件只有这一种彩色 -->
+    <color name="accent">#FF2563EB</color>
+    <!-- 强调色当文字用时压深一档：10sp 小字在近实色面板上要到 4.5:1 -->
+    <color name="accent_text">#FF1E40AF</color>
+    <!-- 今天整列铺的淡强调色：在 92% 白的面板上要比旧的 7.8% 重一档才看得见 -->
+    <color name="accent_soft">#242563EB</color>
 
-    <!-- 组件面板：68% 白。再透下去，12sp 次文字压在深色壁纸上会掉到 3:1 以下 -->
-    <color name="widget_bg_light">#ADFFFFFF</color>
-    <color name="widget_bg_dark">#AD1F2329</color>
+    <!-- 组件面板：92% 白，近实色。再透下去，次文字压在饱和绿壁纸上会发灰发绿 -->
+    <color name="widget_bg_light">#EBFFFFFF</color>
+    <color name="widget_bg_dark">#EB171A20</color>
 
     <color name="text_primary_light">#FF111827</color>
     <color name="text_secondary_light">#FF3F4A5A</color>
@@ -18,7 +19,10 @@
     <color name="text_secondary_dark">#FFA8B0BA</color>
 
     <color name="divider_light">#1F111827</color>
-    <color name="divider_dark">#1FFFFFFF</color>
+    <color name="divider_dark">#24FFFFFF</color>
     <color name="progress_track_light">#1F111827</color>
-    <color name="progress_track_dark">#26FFFFFF</color>
+    <color name="progress_track_dark">#29FFFFFF</color>
+
+    <!-- App 里「周次」小方块的描边：深浅色主题都能看见的中性灰 -->
+    <color name="chip_line">#598A8F98</color>
 </resources>

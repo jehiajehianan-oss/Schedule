@@ -4,8 +4,7 @@
 $ErrorActionPreference = "Stop"
 
 $root = Split-Path -Parent $PSScriptRoot
-# adb 从 PATH 里找；找不到就改这一行，指向你自己的 platform-toolsdb.exe
-$adb  = "adb"
+$adb  = "C:\Users\Jehia\android-build\sdk\platform-tools\adb.exe"
 $apk  = Join-Path $root "output\我的课表-v1.0-debug.apk"
 
 if (-not (Test-Path -LiteralPath $adb)) {

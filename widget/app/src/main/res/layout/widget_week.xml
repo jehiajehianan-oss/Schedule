@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  本周课表：标题 + 日期区间 → 网格。
+  网格是「一行一个 LinearLayout」拼出来的，不是 GridLayout：
+  行高用 layout_weight 分配最稳，表头那一行单独固定 22dp，列宽靠同一套 layout_weight 对齐。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_root"
     android:layout_width="match_parent"
@@ -7,22 +12,40 @@
     android:orientation="vertical"
     android:padding="10dp">
 
-    <TextView
-        android:id="@+id/title"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textColor="@color/text_primary_light"
-        android:textSize="13sp"
-        android:textStyle="bold" />
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
-    <GridLayout
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/text_primary_light"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/range"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="end"
+            android:maxLines="1"
+            android:textColor="@color/text_secondary_light"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/grid"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="6dp"
         android:layout_weight="1"
-        android:columnCount="8" />
+        android:orientation="vertical" />
 
 </LinearLayout>

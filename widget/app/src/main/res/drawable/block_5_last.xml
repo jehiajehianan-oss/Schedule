@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 由 scripts/export_widget_data.py 按默认色卡生成，不要手改；改色板请改那个脚本。
+     色卡 [5] #B3541E，形状 last。
+     平时用不到这张资源：色块是「白色形状 + setColorFilter 现染」画的，
+     只有少数 ROM 不支持染色时才退回这里，颜色会取最接近的色卡色。 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#B3541E" />
+    <corners
+        android:topLeftRadius="0dp"
+        android:topRightRadius="0dp"
+        android:bottomRightRadius="6dp"
+        android:bottomLeftRadius="6dp" />
+</shape>

@@ -1,8 +1,7 @@
 """把课表导出成 Excel，并顺带检查重复排课与时间冲突。
 
 用法（在项目根目录执行）：
-    python coursetable\\export_excel.py
-    python -m coursetable.export_excel
+    python assets\\coursetable\\export_excel.py
 
 输入：data/course.html
 输出：output/我的课程表.xlsx
@@ -15,8 +14,12 @@ from pathlib import Path
 
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT))
+# 这个文件在 assets/coursetable/ 下，所以项目根目录是往上两级。
+# 项目根和 assets/ 都加进 sys.path：不管 coursetable 放在哪一层，import 都能成功。
+ROOT = Path(__file__).resolve().parents[2]
+for candidate in (ROOT, ROOT / "assets"):
+    if str(candidate) not in sys.path:
+        sys.path.insert(0, str(candidate))
 
 from coursetable.schedule import build_schedule, find_problems  # noqa: E402
 

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 今日课程：顶部导航条 → 当前课程英雄区 → 进度条 → 分隔线 → 下一节。
-     全组件只有「课名」一处大字，保证 1~2 秒能找到现在上什么课。 -->
+<!--
+  今日课程：顶部导航条 + 状态药丸 → 英雄区（课程色圆角竖条 + 课名/时间/教室）→ 进度条
+            → 分隔线 → NEXT 一行。
+  中间内容区吃掉 weight=1 并垂直居中，NEXT 贴底，大尺寸下不会在下方留一大片空白。
+  全组件只有「课名」一处大字，保证 1~2 秒能找到现在上什么课。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_root"
     android:layout_width="match_parent"
@@ -31,86 +35,102 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
-            android:letterSpacing="0.05"
+            android:background="@drawable/pill_bg"
             android:maxLines="1"
-            android:textColor="@color/accent"
-            android:textSize="10sp" />
+            android:paddingStart="8dp"
+            android:paddingTop="2dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="2dp"
+            android:textColor="#FFFFFFFF"
+            android:textSize="10sp"
+            android:visibility="gone" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/hero"
+        android:id="@+id/body"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/status_bar"
-            android:layout_width="3dp"
-            android:layout_height="match_parent"
-            android:background="@color/accent" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:id="@+id/hero"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:paddingStart="10dp">
+            android:baselineAligned="false"
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/course_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textColor="@color/text_primary_light"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/status_bar"
+                android:layout_width="4dp"
+                android:layout_height="match_parent"
+                android:importantForAccessibility="no"
+                android:scaleType="fitXY"
+                android:src="@drawable/bar_shape" />
 
-            <TextView
-                android:id="@+id/course_time"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:id="@+id/hero_txt"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textColor="@color/text_primary_light"
-                android:textSize="14sp" />
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingStart="10dp">
 
-            <TextView
-                android:id="@+id/course_meta"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textColor="@color/text_secondary_light"
-                android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/course_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/text_primary_light"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/course_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/text_primary_light"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/course_meta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/text_secondary_light"
+                    android:textSize="12sp" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
 
-    <ProgressBar
-        android:id="@+id/progress"
-        style="@android:style/Widget.ProgressBar.Horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginTop="10dp"
-        android:max="100"
-        android:progress="0"
-        android:progressDrawable="@drawable/progress_bar" />
+        <ProgressBar
+            android:id="@+id/progress"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_marginTop="10dp"
+            android:max="100"
+            android:progress="0"
+            android:progressDrawable="@drawable/progress_bar" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="12dp"
         android:background="@color/divider_light" />
 
     <LinearLayout
         android:id="@+id/next"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="7dp"
         android:orientation="vertical" />
 
 </LinearLayout>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 「下一节」这一行的样式：整体比英雄区低一级，没有强调色。 -->
+<!-- 「下一节 / 下一场」这一行的样式：整体比英雄区低一级，没有强调色。 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/row_root"
     android:layout_width="match_parent"

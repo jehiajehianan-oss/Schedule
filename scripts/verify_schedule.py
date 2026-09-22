@@ -20,7 +20,10 @@ from pathlib import Path
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT))
+# coursetable 包在 assets/ 下（和壁纸放一起），根目录和 assets/ 都加上，挪位置也不会失效
+for candidate in (ROOT, ROOT / "assets"):
+    if str(candidate) not in sys.path:
+        sys.path.insert(0, str(candidate))
 
 from coursetable.schedule import expand_weeks  # noqa: E402
 

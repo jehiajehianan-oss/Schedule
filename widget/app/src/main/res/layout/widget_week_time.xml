@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/section"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:layout_columnWeight="0.6"
-    android:layout_rowWeight="1"
-    android:gravity="center"
-    android:maxLines="1"
-    android:textColor="@color/text_secondary_light"
-    android:textSize="9sp" />
+<!-- 时间列：上行节次序号、下行该节开始时间（如 1 / 08:00），底部一条 1px 细分隔线 -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="38dp"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/section_no"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:textColor="@color/text_secondary_light"
+            android:textSize="9sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/section_clock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:textColor="@color/text_secondary_light"
+            android:textSize="8sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/hair"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom" />
+</FrameLayout>

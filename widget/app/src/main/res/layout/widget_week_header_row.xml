@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 表头行：固定 22dp，比节次行高一点，星期胶囊才有呼吸空间 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/row"
+    android:layout_width="match_parent"
+    android:layout_height="22dp"
+    android:layout_weight="0"
+    android:orientation="horizontal" />

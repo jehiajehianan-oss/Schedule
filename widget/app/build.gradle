@@ -17,6 +17,9 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            // 个人自用：Release 也走调试签名，这样 app-release.apk 能直接装到手机上。
+            // 调试签名不能用于对外分发，将来要上架必须换成自己的正式签名。
+            signingConfig signingConfigs.debug
         }
     }
 
